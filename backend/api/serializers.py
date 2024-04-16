@@ -202,7 +202,7 @@ class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
             except ObjectDoesNotExist:
                 raise serializers.ValidationError(
                     {'ingredients': 'Ингредиент не существует.'})
-        return data
+        return super().validate(data)
 
     @staticmethod
     def recipe_ingredient_create(ingredients_data, recipe):
@@ -349,7 +349,8 @@ class ShoppingCartSerializer(BaseCreateSerializer):
     def validate(self, data):
         user = data['user']
         recipe = data['recipe']
-        for qwery_recipe in user.shopping_list.prefetch_related('recipe').all():
+        for qwery_recipe in user.shopping_list.prefetch_related(
+                'recipe').all():
             if recipe == qwery_recipe.recipe:
                 raise serializers.ValidationError(
                     'Такой рецепт уже добавлен.'

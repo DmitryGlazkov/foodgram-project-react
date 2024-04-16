@@ -1,1 +1,3 @@
-# praktikum_new_diplom
+# Foodgram
+
+Ссылка на проект: https://ypstudyhost.hopto.org/
