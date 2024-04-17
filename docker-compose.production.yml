@@ -4,6 +4,7 @@ volumes:
   pg_data:
   static:
   media:
+  docs:
 
 services:
   db:
@@ -18,15 +19,17 @@ services:
     volumes:
       - media:/app/media
       - static:/backend_static
+      - docs:/app/static/data/docs
     depends_on:
       - db
 
   frontend:
-    image: dmitryglazkov/foodgram_frontend
+    image: r4zeel/foodgram_frontend
     env_file: .env
-    command: cp -r /app/build/. /frontend_static/
     volumes:
-      - static:/frontend_static
+      - static:/app/result_build
+    depends_on:
+      - gateway
 
   gateway:
     image: dmitryglazkov/foodgram_gateway
@@ -36,6 +39,7 @@ services:
     volumes:
       - static:/staticfiles
       - media:/media
+      - docs:/usr/share/nginx/html/api/docs
     depends_on:
       - backend
       - frontend
