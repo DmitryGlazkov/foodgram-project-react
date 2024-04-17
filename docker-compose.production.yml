@@ -24,7 +24,7 @@ services:
       - db
 
   frontend:
-    image: r4zeel/foodgram_frontend
+    image: dmitryglazkov/foodgram_frontend
     env_file: .env
     volumes:
       - static:/app/result_build
