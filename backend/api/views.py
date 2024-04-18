@@ -131,8 +131,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
         if delete_instanse:
             delete_instanse.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
-        if not delete_instanse:
-            delete_instanse = get_object_or_404(model, pk=pk)
+        # if not delete_instanse:
+        #     delete_instanse = get_object_or_404(model, pk=pk)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
     @action(
