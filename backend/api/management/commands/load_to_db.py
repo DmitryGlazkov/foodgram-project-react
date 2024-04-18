@@ -7,7 +7,7 @@ from django.db.utils import IntegrityError
 
 from recipes.models import Ingredient
 
-DATA_ROOT = os.path.join(settings.BASE_DIR.parent.parent.parent, 'data')
+DATA_ROOT = os.path.join(settings.BASE_DIR.parent.parent.parent.parent, 'data')
 
 
 class Command(BaseCommand):
