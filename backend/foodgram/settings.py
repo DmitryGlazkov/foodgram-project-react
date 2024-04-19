@@ -13,10 +13,9 @@ SECRET_KEY = os.getenv('SECRET_KEY', default=get_random_secret_key())
 DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '127.0.0.1' 'localhost').split(' ')
-# ALLOWED_HOSTS = ['*']
 
-# SRF_TRUSTED_ORIGINS = [os.getenv('CSRF_TRUSTED_ORIGINS')]
-CSRF_TRUSTED_ORIGINS = ['https://*.ypstudyhost.hopto.org/']
+SRF_TRUSTED_ORIGINS = [os.getenv('CSRF_TRUSTED_ORIGINS')]
+# CSRF_TRUSTED_ORIGINS = ['https://*.ypstudyhost.hopto.org/']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -84,14 +83,6 @@ else:
         }
     }
 
-'''
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-'''
 
 AUTH_PASSWORD_VALIDATORS = [
     {

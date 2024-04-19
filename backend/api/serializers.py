@@ -302,7 +302,7 @@ class FollowCreateSerializer(serializers.ModelSerializer):
             context=self.context).data
 
 
-class BaseCreateSerializer(serializers.ModelSerializer):
+class CommonCreateSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         return RecipeShortSerializer(
@@ -321,9 +321,7 @@ class BaseCreateSerializer(serializers.ModelSerializer):
         validator(attrs)
 
 
-class FavoriteSerializer(BaseCreateSerializer):
-    """Сериализатор модели избранное."""
-
+class FavoriteSerializer(CommonCreateSerializer):
     class Meta:
         model = Favorite
         fields = ('user', 'recipe')
@@ -340,7 +338,7 @@ class FavoriteSerializer(BaseCreateSerializer):
         return super().validate(data)
 
 
-class ShoppingCartSerializer(BaseCreateSerializer):
+class ShoppingCartSerializer(CommonCreateSerializer):
     class Meta:
         model = ShoppingCart
         fields = ('user', 'recipe')
