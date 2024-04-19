@@ -11,7 +11,6 @@ DATA_ROOT = os.path.join(settings.BASE_DIR, 'static/data')
 
 
 class Command(BaseCommand):
-    help = 'loading ingredients from data in json'
 
     def add_arguments(self, parser):
         parser.add_argument('filename', default='ingredients.json', nargs='?',

@@ -61,7 +61,7 @@
     TELEGRAM_TOKEN=<telegram token>
 ```
 * Выполните ```git push``` на DockerHub.
-* После деплоя проекта на удалённый сервер создайте суперпользователя:
+* После деплоя проекта на удалённый сервер, создайте суперпользователя:
 ```
    sudo docker-compose.production.yml exec backend python manage.py createsuperuser
 ```
