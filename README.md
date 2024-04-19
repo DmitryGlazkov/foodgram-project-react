@@ -63,7 +63,7 @@
 * Выполните ```git push``` на DockerHub.
 * После деплоя проекта на удалённый сервер, создайте суперпользователя:
 ```
-   sudo docker-compose.production.yml exec backend python manage.py createsuperuser
+   sudo docker exec -it foodgram-backend-1 python manage.py createsuperuser
 ```
 
 ## Автор
