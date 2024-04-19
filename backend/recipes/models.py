@@ -44,7 +44,7 @@ class Ingredient(models.Model):
     )
 
     class Meta:
-        ordering = ['id',]
+        ordering = ['id', ]
         verbose_name = 'Ингредиент'
         verbose_name_plural = 'Ингредиенты'
 
@@ -107,7 +107,7 @@ class Recipe(models.Model):
     )
 
     class Meta:
-        ordering = ['-pub_date',]
+        ordering = ['-pub_date', ]
         verbose_name = 'Рецепт'
         verbose_name_plural = 'Рецепты'
 
