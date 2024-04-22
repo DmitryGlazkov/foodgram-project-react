@@ -170,45 +170,33 @@ class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
         )
 
     def validate(self, data):
-        name = data.get('name')
-        if not name:
+        if not data.get('name'):
             raise serializers.ValidationError('Обязательное поле')
-
-        text = data.get('text')
-        if not text:
+        if not data.get('text'):
             raise serializers.ValidationError('Обязательное поле')
-
-        cooking_time = data.get('cooking_time')
-        if not cooking_time:
+        if not data.get('cooking_time'):
             raise serializers.ValidationError('Обязательное поле')
-
-        image = data.get('image')
-        if not image:
+        if not data.get('image'):
             raise serializers.ValidationError('Обязательное поле')
-
         ingredients = data.get('ingredients')
         if not ingredients:
             raise serializers.ValidationError(
                 {'ingredients': 'Добавьте ингредиенты.'}
             )
-
         tags = data.get('tags')
         if not tags:
             raise serializers.ValidationError(
                 {'tags': 'Добавьте хотя бы один тег.'}
             )
-
         ingredients_count = [ingredient['id'] for ingredient in ingredients]
         if len(ingredients_count) != len(set(ingredients_count)):
             raise serializers.ValidationError(
                 {'ingredients': 'Нельзя добавлять одинаковые ингредиенты.'}
             )
-
         if len(tags) != len(set(tags)):
             raise serializers.ValidationError(
                 {'tags': 'Нельзя добавлять одинаковые теги.'}
             )
-
         for ingredient_id in ingredients_count:
             try:
                 Ingredient.objects.get(pk=ingredient_id)
