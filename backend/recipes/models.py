@@ -135,6 +135,7 @@ class RecipeIngredient(models.Model):
     class Meta:
         verbose_name = 'Состав рецепта'
         verbose_name_plural = 'Состав рецептов'
+        unique_together = (('recipe', 'ingredient'),)
 
     def __str__(self):
         return f'{self.ingredient} в {self.recipe}'
@@ -156,6 +157,7 @@ class Favorite(models.Model):
         verbose_name = 'Избранное'
         verbose_name_plural = 'Избранное'
         default_related_name = 'favorites'
+        unique_together = (('user', 'recipe'),)
 
     def __str__(self):
         return f'{self.user} - {self.recipe}'
@@ -177,6 +179,7 @@ class ShoppingCart(models.Model):
         verbose_name = 'Список покупок'
         verbose_name_plural = 'Списки покупок'
         default_related_name = 'shopping_list'
+        unique_together = (('user', 'recipe'),)
 
     def __str__(self):
         return f'{self.user} - {self.recipe}'

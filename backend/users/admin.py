@@ -4,8 +4,7 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import Group
 
 from recipes.models import Recipe
-
-from .models import Follow
+from users.models import Follow
 
 User = get_user_model()
 

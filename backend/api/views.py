@@ -9,18 +9,17 @@ from rest_framework.decorators import action
 from rest_framework.permissions import SAFE_METHODS, AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
+from api.filters import IngredientFilter, RecipeFilter
+from api.pagination import Paginator
+from api.permissions import IsAuthorOrReadOnly
+from api.serializers import (FavoriteSerializer, FollowCreateSerializer,
+                             FollowSerializer, IngredientSerializer,
+                             RecipeCreateUpdateSerializer, RecipeSerializer,
+                             ShoppingCartSerializer, TagSerializer,
+                             UserSerializer)
 from recipes.models import (Favorite, Ingredient, Recipe, RecipeIngredient,
                             ShoppingCart, Tag)
 from users.models import Follow
-
-from .filters import IngredientFilter, RecipeFilter
-from .pagination import Paginator
-from .permissions import IsAuthorOrReadOnly
-from .serializers import (FavoriteSerializer, FollowCreateSerializer,
-                          FollowSerializer, IngredientSerializer,
-                          RecipeCreateUpdateSerializer, RecipeSerializer,
-                          ShoppingCartSerializer, TagSerializer,
-                          UserSerializer)
 
 User = get_user_model()
 

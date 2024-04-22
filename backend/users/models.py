@@ -60,6 +60,7 @@ class Follow(models.Model):
         ordering = ['-id']
         verbose_name = 'Подписка'
         verbose_name_plural = 'Подписки'
+        unique_together = (('user', 'author'),)
 
     def __str__(self):
         return f'{self.user} подписчик - {self.author}'

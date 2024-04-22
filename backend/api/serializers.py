@@ -1,4 +1,3 @@
-from django.core.exceptions import ObjectDoesNotExist
 from djoser.serializers import UserCreateSerializer
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
@@ -171,35 +170,49 @@ class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
         )
 
     def validate(self, data):
-        for field in ['name', 'text', 'cooking_time', 'image']:
-            if not data.get(field):
-                raise serializers.ValidationError(
-                    f'{field} - Обязательное поле.')
+        name = data.get('name')
+        if not name:
+            raise serializers.ValidationError('Обязательное поле')
+
+        text = data.get('text')
+        if not text:
+            raise serializers.ValidationError('Обязательное поле')
+
+        cooking_time = data.get('cooking_time')
+        if not cooking_time:
+            raise serializers.ValidationError('Обязательное поле')
+
+        image = data.get('image')
+        if not image:
+            raise serializers.ValidationError('Обязательное поле')
 
         ingredients = data.get('ingredients')
-        tags = data.get('tags')
-
         if not ingredients:
             raise serializers.ValidationError(
                 {'ingredients': 'Добавьте ингредиенты.'}
             )
+
+        tags = data.get('tags')
         if not tags:
             raise serializers.ValidationError(
                 {'tags': 'Добавьте хотя бы один тег.'}
             )
+
         ingredients_count = [ingredient['id'] for ingredient in ingredients]
         if len(ingredients_count) != len(set(ingredients_count)):
             raise serializers.ValidationError(
                 {'ingredients': 'Нельзя добавлять одинаковые ингредиенты.'}
             )
+
         if len(tags) != len(set(tags)):
             raise serializers.ValidationError(
                 {'tags': 'Нельзя добавлять одинаковые теги.'}
             )
+
         for ingredient_id in ingredients_count:
             try:
                 Ingredient.objects.get(pk=ingredient_id)
-            except ObjectDoesNotExist:
+            except Ingredient.DoesNotExist:
                 raise serializers.ValidationError(
                     {'ingredients': 'Ингредиент не существует.'})
         return super().validate(data)
@@ -229,7 +242,6 @@ class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         ingredients_data = validated_data.pop('ingredients', None)
         RecipeIngredient.objects.filter(recipe=instance).delete()
-        super().update(instance, validated_data)
         self.recipe_ingredient_create(ingredients_data, instance)
         return super().update(instance, validated_data)
 
@@ -269,7 +281,7 @@ class FollowSerializer(UserSerializer):
             if recipes_limit:
                 recipes = recipes[:int(recipes_limit)]
         except ValueError:
-            pass
+            raise ValueError('Некорректное значение')
         return RecipeShortSerializer(recipes, many=True).data
 
     def get_recipes_count(self, data):
@@ -330,11 +342,8 @@ class FavoriteSerializer(CommonCreateSerializer):
     def validate(self, data):
         user = data['user']
         recipe = data['recipe']
-        for qwery_recipe in user.favorites.prefetch_related('recipe').all():
-            if recipe == qwery_recipe.recipe:
-                raise serializers.ValidationError(
-                    'Такой рецепт уже добавлен.'
-                )
+        if Favorite.objects.filter(recipe=recipe, user=user).exists():
+            raise serializers.ValidationError('Такой рецепт уже добавлен.')
         return super().validate(data)
 
 
@@ -347,10 +356,6 @@ class ShoppingCartSerializer(CommonCreateSerializer):
     def validate(self, data):
         user = data['user']
         recipe = data['recipe']
-        for qwery_recipe in user.shopping_list.prefetch_related(
-                'recipe').all():
-            if recipe == qwery_recipe.recipe:
-                raise serializers.ValidationError(
-                    'Такой рецепт уже добавлен.'
-                )
+        if user.shopping_list.filter(recipe=recipe).exists():
+            raise serializers.ValidationError('Такой рецепт уже добавлен.')
         return super().validate(data)
