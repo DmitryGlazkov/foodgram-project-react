@@ -21,8 +21,8 @@ class AdminRecipe(admin.ModelAdmin):
 
     @admin.display(description='Ингредиенты')
     def get_ingredients_display(self, obj):
-        return ', '.join([
-            ingredient.name for ingredient in obj.ingredients.values()])
+        return ', '.join(
+            obj.ingredients.all().values_list('name', flat=True))
 
     @admin.display(description='Добавлено в избранное')
     def favorites_count(self, obj):
