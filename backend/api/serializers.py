@@ -1,3 +1,4 @@
+from django.core.validators import MaxLengthValidator, MinLengthValidator
 from djoser.serializers import UserCreateSerializer
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
@@ -141,17 +142,31 @@ class IngredientCreateInRecipeSerializer(serializers.ModelSerializer):
 
 
 class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
+    name = serializers.CharField(
+        required=True,
+        validators=[MinLengthValidator(1), MaxLengthValidator(200)],
+    )
+    text = serializers.CharField(
+        required=True,
+        validators=[MinLengthValidator(1), MaxLengthValidator(200)],
+    )
     ingredients = IngredientCreateInRecipeSerializer(
+        required=True,
         many=True,
         write_only=True
     )
-    image = Base64ImageField(allow_null=True, allow_empty_file=True)
+    image = Base64ImageField(
+        allow_null=True,
+        allow_empty_file=True,
+        required=True,
+    )
     author = UserSerializer(read_only=True)
     tags = serializers.PrimaryKeyRelatedField(
         queryset=Tag.objects.all(),
         many=True
     )
     cooking_time = serializers.IntegerField(
+        required=True,
         min_value=TIME_MIN,
         max_value=TIME_MAX
     )
@@ -170,33 +185,33 @@ class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
         )
 
     def validate(self, data):
-        if not data.get('name'):
-            raise serializers.ValidationError('Обязательное поле')
-        if not data.get('text'):
-            raise serializers.ValidationError('Обязательное поле')
-        if not data.get('cooking_time'):
-            raise serializers.ValidationError('Обязательное поле')
-        if not data.get('image'):
-            raise serializers.ValidationError('Обязательное поле')
+        image = data.get('image')
+        if not image:
+            raise serializers.ValidationError('Обязательное поле.')
+
         ingredients = data.get('ingredients')
         if not ingredients:
             raise serializers.ValidationError(
                 {'ingredients': 'Добавьте ингредиенты.'}
             )
+
         tags = data.get('tags')
         if not tags:
             raise serializers.ValidationError(
                 {'tags': 'Добавьте хотя бы один тег.'}
             )
+
         ingredients_count = [ingredient['id'] for ingredient in ingredients]
         if len(ingredients_count) != len(set(ingredients_count)):
             raise serializers.ValidationError(
                 {'ingredients': 'Нельзя добавлять одинаковые ингредиенты.'}
             )
+
         if len(tags) != len(set(tags)):
             raise serializers.ValidationError(
                 {'tags': 'Нельзя добавлять одинаковые теги.'}
             )
+
         for ingredient_id in ingredients_count:
             try:
                 Ingredient.objects.get(pk=ingredient_id)
